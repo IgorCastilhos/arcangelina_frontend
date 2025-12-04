@@ -15,6 +15,15 @@ function App() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionId] = useState(() => {
+    // Get or create a unique session ID
+    let id = localStorage.getItem('chatSessionId');
+    if (!id) {
+      id = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('chatSessionId', id);
+    }
+    return id;
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   const scrollToBottom = () => {
@@ -42,7 +51,8 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userMsg,
-          history: messages
+          history: messages,
+          sessionId: sessionId  // Add session ID to the request
         }),
       });
       
