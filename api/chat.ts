@@ -21,8 +21,6 @@ export default async function handler(req: VercelRequest,
     // Replace with your actual N8N Production URL
     const n8nUrl = process.env.N8N_PRODUCTION_URL;
     
-  
-    
     const response = await fetch(n8nUrl, {
       method: 'POST',
       headers: {
@@ -50,8 +48,10 @@ export default async function handler(req: VercelRequest,
     } else if (data.output) {
       // In case N8N returns { output: "text" } directly
       aiResponse = data.output;
+    } else if (typeof data === 'string') {
+      // In case N8N returns a plain string
+      aiResponse = data;
     }
-    
     
     // 3. Return the AI's response to your frontend
     return res.status(200).json({
