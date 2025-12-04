@@ -40,18 +40,34 @@ export default async function handler(req: VercelRequest,
     
     const data = await response.json();
     
-    // N8N returns an array like [{ output: "text" }]
+    console.log('N8N Raw Response:', JSON.stringify(data, null, 2));
+    
+    // Handle multiple possible N8N response formats
     let aiResponse = 'Resposta do cosmos não encontrada...';
     
-    if (Array.isArray(data) && data.length > 0 && data[0].output) {
-      aiResponse = data[0].output;
-    } else if (data.output) {
-      // In case N8N returns { output: "text" } directly
+    // Case 1: [{ output: "text" }] - Original N8N array format
+    if (Array.isArray(data) && data.length > 0) {
+      if (data[0].output) {
+        aiResponse = data[0].output;
+      } else if (data[0].response) {
+        // Case 2: [{ response: "text" }] - Wrapped response
+        aiResponse = data[0].response;
+      }
+    }
+    // Case 3: { output: "text" } - Direct object
+    else if (data.output) {
       aiResponse = data.output;
-    } else if (typeof data === 'string') {
-      // In case N8N returns a plain string
+    }
+    // Case 4: { response: "text" } - Wrapped object
+    else if (data.response) {
+      aiResponse = data.response;
+    }
+    // Case 5: Plain string
+    else if (typeof data === 'string') {
       aiResponse = data;
     }
+    
+    console.log('Extracted AI Response:', aiResponse);
     
     // 3. Return the AI's response to your frontend
     return res.status(200).json({
