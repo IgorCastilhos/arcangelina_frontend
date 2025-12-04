@@ -3,6 +3,8 @@ import {
   useRef,
   useEffect
 } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import arcangelinaAvatar
   from './assets/arcangelina.png';
 
@@ -246,12 +248,34 @@ function App() {
                     className={`p-5 rounded-3xl backdrop-blur-md shadow-2xl transition-all duration-300 ${msg.role === 'user' ?
                       'bg-gradient-to-br from-purple-600/90 to-pink-600/90 text-white rounded-br-md border border-purple-400/30 shadow-[0_8px_24px_rgba(168,85,247,0.4)] group-hover:shadow-[0_8px_32px_rgba(168,85,247,0.6)]' :
                       'bg-slate-800/60 text-purple-50 rounded-bl-md border border-purple-500/30 shadow-[0_8px_24px_rgba(0,0,0,0.4)] group-hover:shadow-[0_8px_32px_rgba(168,85,247,0.3)]'}`}>
-                    <div
-                      className="leading-relaxed whitespace-pre-wrap">
-                      {msg.content ||
+                    {msg.role === 'assistant' ? (
+                      <div className="markdown-content prose prose-invert max-w-none">
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            // Customizar estilos dos elementos Markdown
+                            p: ({ children }) => <p className="mb-3 leading-relaxed text-purple-50">{children}</p>,
+                            ul: ({ children }) => <ul className="mb-3 ml-4 space-y-2 list-disc list-inside">{children}</ul>,
+                            ol: ({ children }) => <ol className="mb-3 ml-4 space-y-2 list-decimal list-inside">{children}</ol>,
+                            li: ({ children }) => <li className="text-purple-50 leading-relaxed">{children}</li>,
+                            strong: ({ children }) => <strong className="font-bold text-purple-200">{children}</strong>,
+                            em: ({ children }) => <em className="italic text-purple-100">{children}</em>,
+                            h1: ({ children }) => <h1 className="text-2xl font-bold mb-3 text-purple-100">{children}</h1>,
+                            h2: ({ children }) => <h2 className="text-xl font-bold mb-2 text-purple-100">{children}</h2>,
+                            h3: ({ children }) => <h3 className="text-lg font-bold mb-2 text-purple-100">{children}</h3>,
+                            code: ({ children }) => <code className="bg-purple-900/50 px-1.5 py-0.5 rounded text-pink-300">{children}</code>,
+                          }}
+                        >
+                          {msg.content || ''}
+                        </ReactMarkdown>
+                      </div>
+                    ) : (
+                      <div className="leading-relaxed whitespace-pre-wrap">
+                        {msg.content ||
                           <span
-                              className="inline-block w-2 h-4 bg-purple-400 animate-pulse">|</span>}
-                    </div>
+                            className="inline-block w-2 h-4 bg-purple-400 animate-pulse">|</span>}
+                      </div>
+                    )}
                   </div>
                   
                   {msg.role === 'user' && (
