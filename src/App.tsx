@@ -39,11 +39,7 @@ function App() {
     setInput('');
     setIsLoading(true);
     
-    setMessages(prev => [...prev,
-      {
-        role: 'user',
-        content: userMsg
-      }]);
+    setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     
     try {
       const response = await fetch('/api/chat', {
@@ -52,57 +48,28 @@ function App() {
         body: JSON.stringify({
           message: userMsg,
           history: messages,
-          sessionId: sessionId  // Add session ID to the request
+          sessionId: sessionId
         }),
       });
       
-      if (!response.body) throw new Error("Sem resposta das estrelas");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('API Error:', errorData);
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
       
-      // --- NEW CODE START ---
-      // Since N8N is sending a standard JSON response (not a stream yet)
       const data = await response.json();
-      const botReply = data.response; // Assuming your API returns { response: "text" }
       
-      setMessages(prev => [...prev,
-        {
-          role: 'assistant',
-          content: botReply
-        }]);
-/*
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let botReply = '';
+      const botReply = data.response || 'O cosmos está silencioso...';
       
-      setMessages(prev => [...prev,
-        {
-          role: 'assistant',
-          content: ''
-        }]);
-      
-      while (true) {
-        const {
-          done,
-          value
-        } = await reader.read();
-        if (done) break;
-        
-        const chunk = decoder.decode(value, { stream: true });
-        botReply += chunk;
-        
-        setMessages(prev => {
-          const newHistory = [...prev];
-          newHistory[newHistory.length - 1].content = botReply;
-          return newHistory;
-        });
-      }*/
+      setMessages(prev => [...prev, { role: 'assistant', content: botReply }]);
       
     } catch (error) {
-      console.error(error);
-      setMessages(prev => [...prev,
-        {
-          role: 'assistant',
-          content: "O cosmos está silencioso... (Erro de conexão)"
-        }]);
+      console.error('Frontend error:', error);
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `O cosmos está silencioso... (${error instanceof Error ? error.message : 'Erro de conexão'})`
+      }]);
     } finally {
       setIsLoading(false);
     }
@@ -386,3 +353,4 @@ function App() {
 }
 
 export default App;
+

@@ -21,6 +21,8 @@ export default async function handler(req: VercelRequest,
     // Replace with your actual N8N Production URL
     const n8nUrl = process.env.N8N_PRODUCTION_URL;
     
+  
+    
     const response = await fetch(n8nUrl, {
       method: 'POST',
       headers: {
@@ -40,14 +42,27 @@ export default async function handler(req: VercelRequest,
     
     const data = await response.json();
     
+    // N8N returns an array like [{ output: "text" }]
+    let aiResponse = 'Resposta do cosmos não encontrada...';
+    
+    if (Array.isArray(data) && data.length > 0 && data[0].output) {
+      aiResponse = data[0].output;
+    } else if (data.output) {
+      // In case N8N returns { output: "text" } directly
+      aiResponse = data.output;
+    }
+    
+    
     // 3. Return the AI's response to your frontend
-    // Note: Since we aren't streaming yet, we send the whole text at once
     return res.status(200).json({
-      response: data.response
+      response: aiResponse
     });
     
   } catch (error) {
     console.error('API Error:', error);
-    return res.status(500).json({ error: 'Failed to communicate with the stars.' });
+    return res.status(500).json({
+      error: 'Failed to communicate with the stars.',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 }
