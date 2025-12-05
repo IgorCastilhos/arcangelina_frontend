@@ -104,7 +104,7 @@ function App() {
         className="relative z-10 flex flex-col items-center min-h-screen">
         {/* Mystical Header */}
         <header
-          className="w-full max-w-4xl p-8 flex flex-col items-center backdrop-blur-xl bg-black/20 border-b border-purple-500/30 shadow-[0_8px_32px_0_rgba(168,85,247,0.2)] sticky top-0 z-50">
+          className="w-full max-w-4xl p-8 flex flex-col items-center sticky top-0 z-50">
           <div
             className="relative group">
             {/* Orbital Rings */}
@@ -132,16 +132,14 @@ function App() {
           </div>
           
           <h1
-            className="mt-6 text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-300 to-purple-300 animate-gradient-x tracking-wider drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+            className="mt-6 text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-pink-300 to-purple-300 animate-gradient-x tracking-wider drop-shadow-[0_0_15px_rgba(168,85,247,0.5)] leading-tight pb-2">
             ✨
-            Mesa
-            Cósmica
+            Arcangelina
+            Fé
             ✨
           </h1>
           <div
             className="mt-2 text-xl font-light text-purple-200/90 italic">
-            Arcangelina
-            ·
             Oráculo
             das
             Estrelas
@@ -162,7 +160,7 @@ function App() {
             {/* Welcome Message */}
             {messages.length === 0 && (
               <div
-                className="text-center space-y-6 mt-20 animate-fade-in">
+                className="text-center space-y-4 animate-fade-in">
                 <div
                   className="inline-block p-6 backdrop-blur-md bg-purple-900/30 border border-purple-400/30 rounded-3xl shadow-[0_8px_32px_0_rgba(168,85,247,0.3)]">
                   <div
@@ -190,7 +188,7 @@ function App() {
                 
                 {/* Suggestion Cards */}
                 <div
-                  className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 max-w-3xl mx-auto">
+                  className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 max-w-3xl mx-auto">
                   {[{
                     icon: '🌟',
                     text: 'Leia meu destino',
@@ -293,12 +291,9 @@ function App() {
         
         {/* Mystical Input Area */}
         <footer
-          className="w-full max-w-4xl p-6 backdrop-blur-xl bg-black/20 border-t border-purple-500/30 shadow-[0_-8px_32px_0_rgba(168,85,247,0.2)]">
+          className="w-full max-w-4xl p-6">
           <div
             className="relative">
-            {/* Glow Effect */}
-            <div
-              className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-purple-500/20 rounded-full blur-xl opacity-50"></div>
             
             <div
               className="relative flex items-center gap-3">
@@ -310,13 +305,9 @@ function App() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                   placeholder="Consulte o cosmos... 🌌"
-                  className="w-full bg-slate-900/80 backdrop-blur-md border-2 border-purple-500/30 text-white placeholder:text-purple-300/50 rounded-full py-4 px-8 pr-16 focus:outline-none focus:border-purple-400 focus:shadow-[0_0_24px_rgba(168,85,247,0.5)] transition-all duration-300 group-hover:border-purple-400/50"
+                  className="w-full bg-white/5 backdrop-blur-md border-2 border-purple-500/30 text-white placeholder:text-purple-300/50 rounded-full py-4 px-8 pr-16 focus:outline-none focus:border-purple-400 focus:shadow-[0_0_24px_rgba(168,85,247,0.5)] transition-all duration-300 group-hover:border-purple-400/50"
                   disabled={isLoading}
                 />
-                <div
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-2xl animate-float pointer-events-none">
-                  ✨
-                </div>
               </div>
               
               <button
